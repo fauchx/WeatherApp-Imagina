@@ -1,11 +1,12 @@
-import { API_URL } from "@/utils";
+import {  getApiUrl } from "@/utils";
 
-export default async function getData () {
+export default async function getData (city) {
     try{
-        const response = await fetch(API_URL)
+        console.log(city)
+        const response = await fetch(getApiUrl(city))
         const data = await response.json();
-        console.log(data.weather);
-        console.log(data.main)
+        console.log(data.name)
+        return data
     }
     catch (error){
     }
