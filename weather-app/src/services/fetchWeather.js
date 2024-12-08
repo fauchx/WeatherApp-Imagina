@@ -1,3 +1,4 @@
+// src/services/fetchWeather.js
 import { useState, useEffect } from 'react';
 import getData from '@/services/getData';
 
@@ -6,6 +7,8 @@ export default function useWeather(cityName) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!cityName) return; 
+
     const fetchWeather = async () => {
       try {
         const data = await getData(cityName);
@@ -19,5 +22,6 @@ export default function useWeather(cityName) {
 
     fetchWeather();
   }, [cityName]); 
+
   return { city, error };
 }

@@ -1,5 +1,4 @@
 export default function SearchIcon({icon}){
-    console.log("Icon received in SearchIcon:", icon);
     const icons = {
         "01d":"/images/01d.png",
         "01n":"/images/01n.png",
@@ -21,8 +20,8 @@ export default function SearchIcon({icon}){
         "50n":"/images/50n.png",
     }
     const iconShow = icons[icon]
-    console.log(iconShow)
+
     return(
-        <img src={iconShow} alt="iconWeather"/>
+        <img src={iconShow} className="scale-95" alt="iconWeather"/>
     )
 }

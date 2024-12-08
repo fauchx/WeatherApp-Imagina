@@ -1,27 +1,41 @@
-import { useState } from 'react';
+// src/app/home/page.js
+'use client';
+
+import { useState, useEffect } from 'react';
 import kelvinToCelsius from '@/lib/utils';
 import SearchCity from '@/components/SearchCity';
 import useWeather from '@/services/fetchWeather'; 
 import SearchIcon from '@/components/SearchIcon';
+import Link from "next/link";
+import { useLocation } from '@/context/LocationContext'; 
+import LocationTest from '@/components/LocationTest';
 
 export default function Home() {
   const [citySearch, setSearch] = useState(""); 
-  const [searchCity, setSearchCity] = useState("");
+  const { city, setCity } = useLocation();
+  const defaultCity = "Cali"; 
+  const { city: weatherCity, error } = useWeather(city || defaultCity); 
 
-  const { city, error } = useWeather(searchCity.trim() === "" ? "Cali" : searchCity); 
-  
   const submitCity = (cityToSearch) => {
-    setSearchCity(cityToSearch); 
+    if (cityToSearch.trim()) {
+      setCity(cityToSearch); 
+    }
   };
 
-  if (!city && !error) {
+  useEffect(() => {
+    if (!city) {
+      setCity(defaultCity); 
+    }
+  }, [city, setCity]);
+
+  if (!weatherCity && !error) {
     return <p>Loading...</p>;
   }
 
   if (error) {
     return <p>Error: {error}</p>;
   }
-  console.log(city.weather[0].icon)
+  
   return (
     <div className='bg-custom-bg m-10 rounded-2xl'>
       <h1 className='text-white font-bold text-4xl text-center'>Clima</h1>
@@ -30,27 +44,42 @@ export default function Home() {
         setSearch={setSearch} 
         onSubmit={submitCity} 
       />
-      {city && (
-        <section className='text-gray-200'>
-          <h1>Weather in {city.name}</h1>
-          {city.weather && city.weather.length > 0 ? (
+      {weatherCity && (
+        <section className='text-gray-200 inline-block p-4 flex-col'>
+          <div className='flex flex-row gap-x-10 mx-10 mb-4'>
+            <Link href="/">
+              <button
+                className={`text-2xl font-bold hover:scale-105 transition-all duration-300`}
+              >
+                HOY
+              </button>
+            </Link>
+            <Link href="/Forecast">
+              <button
+                className={`text-2xl font-bold hover:scale-105 transition-all duration-300`}
+              >
+                PRÓXIMOS DÍAS
+              </button>
+            </Link>
+          </div>
+          <h1>Weather in {weatherCity.name}</h1>
+          <LocationTest/>
+          {weatherCity.weather && weatherCity.weather.length > 0 ? (
             <>
-              <p>Main: {city.weather[0].main}</p>
-              <p>Description: {city.weather[0].description}</p>
+              <p>Main: {weatherCity.weather[0].main}</p>
+              <p>Description: {weatherCity.weather[0].description}</p>
             </>
           ) : (
             <p>No weather information available.</p>
           )}
-          {city.main && (
+          {weatherCity.main && (
             <>
-              <p>Temperature: {kelvinToCelsius(city.main.temp)} °C</p>
-              <p>Feels Like: {kelvinToCelsius(city.main.feels_like)} °C</p>
+              <p>Temperature: {kelvinToCelsius(weatherCity.main.temp)} °C</p>
+              <p>Feels Like: {kelvinToCelsius(weatherCity.main.feels_like)} °C</p>
             </>
           )}
-          {city.wind && <p>Wind Speed: {city.wind.speed} m/s</p>}
-          {city.clouds && <p>Cloudiness: {city.clouds.all}%</p>}
           
-          <SearchIcon icon={city.weather[0].icon}/>
+          <SearchIcon icon={weatherCity.weather[0].icon} />
         </section>
       )}
     </div>
