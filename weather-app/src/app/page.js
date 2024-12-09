@@ -1,13 +1,21 @@
-"use client";
-import Home from "@/pages/Home";
+// app/page.js o el archivo que gestiona las rutas principales
+'use client';
+
 import "@/public/css/globals.css";
-import Forecast from "@/pages/Forecast";
+import React from "react";
+import dynamic from "next/dynamic";
+import { LocationProvider } from "@/context/LocationContext.jsx"; // Asegúrate de importar el contexto
+import Router from "@/Router/Router";
+const ClientRouter = dynamic(() => import("@/Router/ClientRouter"), {
+  ssr: false, 
+});
 
 export default function Page() {
   return (
-    <>
-      <Home />
-      <Forecast/>
-    </>
+    <LocationProvider> 
+      <ClientRouter>
+        <Router /> 
+      </ClientRouter>
+    </LocationProvider>
   );
 }

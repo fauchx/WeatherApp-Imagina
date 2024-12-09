@@ -22,6 +22,6 @@ export default function SearchIcon({icon}){
     const iconShow = icons[icon]
 
     return(
-        <img src={iconShow} className="scale-95" alt="iconWeather"/>
+        <img src={iconShow} className="scale-95 flex flex-1" alt="iconWeather"/>
     )
 }

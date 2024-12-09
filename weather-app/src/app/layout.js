@@ -5,10 +5,10 @@ import "@/public/css/globals.css";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-neutral-800">
-        <LocationProvider>
+      <body className="bg-[url('/images/background.jpg')] bg-center h-screen bg-cover bg-no-repeat">
+        
           {children}
-        </LocationProvider>
+       
       </body>
     </html>
   );

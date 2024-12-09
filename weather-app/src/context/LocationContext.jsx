@@ -1,20 +1,23 @@
 // src/context/LocationContext.js
 import React, { createContext, useContext, useState } from 'react';
 
-const LocationContext = createContext();
+// Crear el contexto para la ciudad
+const cityContext = createContext(null);
 
+// Proveedor del contexto
 export const LocationProvider = ({ children }) => {
-  const [city, setCity] = useState('Cali'); 
-  console.log('LocationProvider - city:', city);
+  const [city, setCity] = useState("Cali");
+
   return (
-    <LocationContext.Provider value={{ city, setCity }}>
+    <cityContext.Provider value={{ city, setCity }}>
       {children}
-    </LocationContext.Provider>
+    </cityContext.Provider>
   );
 };
 
+// Hook personalizado para usar el contexto
 export const useLocation = () => {
-  const context = useContext(LocationContext);
+  const context = useContext(cityContext);
   if (!context) {
     throw new Error('useLocation debe ser usado dentro de un LocationProvider');
   }
