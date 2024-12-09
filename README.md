@@ -5,6 +5,6 @@ Clima como humedad, Sensacion termica, Velocidad de viento y mucho más.
 
 ### Instalación
 
-ingresamos a la carpeta weather-app con el comando ${cd weather-app}
-Instalación de dependencias ${npm i}
-Correr el programa ${npm run dev}
+ingresamos a la carpeta weather-app con el comando `cd weather-app`
+Instalación de dependencias `npm i`
+Correr el programa `npm run dev`
