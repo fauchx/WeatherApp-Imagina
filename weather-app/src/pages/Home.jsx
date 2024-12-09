@@ -13,7 +13,7 @@ export default function Home() {
   const [citySearch, setSearch] = useState(""); 
   const { city, setCity } = useLocation(); 
   const defaultCity = "Cali"; 
-  const { city: weatherCity, error } = useWeather(city || defaultCity);  // Usamos el valor de city
+  const { city: weatherCity, error } = useWeather(city || defaultCity);  
 
   const submitCity = (cityToSearch) => {
     if (cityToSearch.trim()) {
@@ -22,10 +22,13 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // Solo establece la ciudad predeterminada si city es null o una cadena vacía
     if (!city) {
-      setCity(defaultCity);  
+      setCity(defaultCity);
     }
+    console.log("City before update:", city);  // Depuración
   }, [city, setCity]);
+  
 
   if (!weatherCity && !error) {
     return <p>Loading...</p>;
@@ -36,15 +39,17 @@ export default function Home() {
   }
   console.log(weatherCity)
   return (
-    <div className='bg-custom-bg bg-opacity-60  m-10 rounded-2xl'>
+    <div className='bg-custom-bg bg-opacity-60 m-10 rounded-2xl'>
       
       <SearchCity 
         citySearch={citySearch} 
         setSearch={setSearch} 
         onSubmit={submitCity} 
       />
+  
       {weatherCity && (
         <section className='text-gray-200 inline-block p-4 flex-col'>
+          
           <div className='flex flex-row gap-x-10 mx-10 mb-4'>
             <Link href="/">
               <button
@@ -61,36 +66,45 @@ export default function Home() {
               </button>
             </Link>
           </div>
-          <div className='flex flex-row justify-around p-10  align-middle'>
-          <section className='flex flex-col p-4 m-2 gap-4'>
-              <h1 className='text-3xl font-semibold text-white'>
-                {weatherCity.name}, {weatherCity.sys.country}
-                 </h1>
-                 <SearchIcon icon={weatherCity.weather[0].icon} />
-                 <p className='text-xl'>Temperature: {kelvinToCelsius(weatherCity.main.temp)} °C</p>
-          </section>
-          <section className='grid grid-cols-3 px-8 m-2 gap-4 w-1/2 bg-neutral-800 bg-opacity-20 items-center rounded-lg text-white'>
+  
           {weatherCity.weather && weatherCity.weather.length > 0 ? (
-            <>
-              <p>Description: {weatherCity.weather[0].description}</p>
-              <p>Humidity: {weatherCity.main.humidity} % </p>
-              <p>Sunrise: {convertToGMTMinus5(weatherCity.sys.sunrise)}</p>
-              <p>Sunset: {convertToGMTMinus5(weatherCity.sys.sunset)}</p>
-            </>
+            <div className='flex flex-row justify-around p-10 align-middle'>
+              
+              <section className='flex flex-col p-4 m-2 gap-4'>
+                <h1 className='text-3xl font-semibold text-white'>
+                  {weatherCity.name}, {weatherCity.sys.country}
+                </h1>
+                <SearchIcon icon={weatherCity.weather[0].icon} />
+                <p className='text-xl'>
+                  Temperature: {kelvinToCelsius(weatherCity.main.temp)} °C
+                </p>
+              </section>
+  
+              <section className='grid grid-cols-3 px-8 m-2 gap-4 w-1/2 bg-neutral-800 bg-opacity-20 items-center rounded-lg text-white'>
+                <>
+                  <p>Description: {weatherCity.weather[0].description}</p>
+                  <p>Humidity: {weatherCity.main.humidity} %</p>
+                  <p>Sunrise: {convertToGMTMinus5(weatherCity.sys.sunrise)}</p>
+                  <p>Sunset: {convertToGMTMinus5(weatherCity.sys.sunset)}</p>
+                  {weatherCity.main && (
+                  <>
+                    <p>Feels Like: {kelvinToCelsius(weatherCity.main.feels_like)} °C</p>
+                    <p>Wind Speed: {weatherCity.wind.speed} m/s</p>
+                  </>
+                )}
+                </>
+              </section>
+            </div>
           ) : (
-            <p className='col-span-3 text-center'>No weather information available.</p>
-          )}
-          {weatherCity.main && (
-            <>
-              <p>Feels Like: {kelvinToCelsius(weatherCity.main.feels_like)} °C</p>
-              <p>Wind Speed:  {weatherCity.wind.speed} m/s</p>
-            </>
-          )}
-        </section>
+            <p className='col-span-3 text-center text-3xl flex justify-center items-center'>
+  No weather information available.
+</p>
 
-          </div>
+          )}
+  
         </section>
       )}
     </div>
   );
+  
 }
